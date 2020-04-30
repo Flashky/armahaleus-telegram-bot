@@ -31,6 +31,6 @@ jobs:
       env:
         CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
-        ./codacy-coverage-reporter report -l Java -r target/site/jacoco/jacoco.xml 
+        ./codacy-coverage-reporter report -l Java 
 
 
