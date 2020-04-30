@@ -27,13 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     name: codacy-coverage-reporter
     steps:
-      - name: git-bash
-        uses: fnkr/github-action-git-bash@v1.1
-        with: 
+      - shell: bash
+        env: 
           CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
-      - name: Set up codacy-coverage-reporter-assembly
-        run: curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
-      - name: Give permissions
-        run: chmod +x codacy-coverage-reporter
-      - name: Generate report
-        run: ./codacy-coverage-reporter report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+          TEST: "aaaa"
+      - name: Test env variable
+        run: cat ${TEST}
