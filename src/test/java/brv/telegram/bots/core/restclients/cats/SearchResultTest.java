@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class SearchResultTest {
 
 	@Test
-	void test() {
+	private void test() {
 		SearchResult result = new SearchResult();
 		result.setId("id");
 		
