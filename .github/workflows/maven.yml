@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: git-bash
         uses: fnkr/github-action-git-bash@v1.1
+        with: 
+          CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
       - name: Set up codacy-coverage-reporter-assembly
         run: curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
       - name: Give permissions
