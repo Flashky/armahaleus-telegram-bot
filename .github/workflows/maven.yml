@@ -34,4 +34,4 @@ jobs:
       - name: Give permissions
         run: chmod +x codacy-coverage-reporter
       - name: Generate report
-        run: java -jar codacy-coverage-reporter-assembly.jar report -l Java -r target/site/jacoco/jacoco.xml
+        run: ./codacy-coverage-reporter report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
