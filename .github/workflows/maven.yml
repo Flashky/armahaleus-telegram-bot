@@ -27,9 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     name: codacy-coverage-reporter
     steps:
-      - shell: bash
-        env: 
+      - name: git-bash
+        uses: fnkr/github-action-git-bash@v1.1
+        with: 
           CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
-          TEST: "aaaa"
+          TEST: "aaa"
       - name: Test env variable
         run: cat ${TEST}
