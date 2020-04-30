@@ -29,6 +29,8 @@ jobs:
     steps:
       - shell: bash
         env:
-          SUPER_SECRET: "mi variable está aquí"
+          CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
-          echo "$SUPER_SECRET"
+          curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
+          chmod +x codacy-coverage-reporter
+          ./codacy-coverage-reporter report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
