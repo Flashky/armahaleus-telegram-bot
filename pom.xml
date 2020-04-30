@@ -28,7 +28,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-
+	    <dependency>
+	        <groupId>org.telegram</groupId>
+	        <artifactId>telegrambots-spring-boot-starter</artifactId>
+	        <version>4.8.1</version>
+	    </dependency>
+	    <dependency>
+        	<groupId>org.telegram</groupId>
+       		<artifactId>telegrambots-abilities</artifactId>
+        	<version>4.8.1</version>
+    	</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
