@@ -1,5 +1,6 @@
 package brv.telegram.bots.core;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
@@ -11,8 +12,8 @@ import org.telegram.abilitybots.api.toggle.BareboneToggle;
 public class ArmahaleusBot extends AbilityBot {
 	
 	private static final BareboneToggle toggle = new BareboneToggle();
-	
-	public ArmahaleusBot(String botToken, String botUsername) {
+
+	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.name}") String botUsername) {
 		super(botToken, botUsername, toggle);
 	}
 
