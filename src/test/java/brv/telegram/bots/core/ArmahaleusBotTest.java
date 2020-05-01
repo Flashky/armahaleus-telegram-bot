@@ -30,7 +30,7 @@ public class ArmahaleusBotTest {
 	public void testAbilities() {
 		
 		Map<String,Ability> abilities = bot.abilities();
-		assertEquals(0, abilities.size());
+		assertEquals(1, abilities.size());
 		
 	}
 }
