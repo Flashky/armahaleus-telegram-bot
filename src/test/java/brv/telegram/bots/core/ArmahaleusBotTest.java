@@ -1,6 +1,7 @@
 package brv.telegram.bots.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Map;
 
@@ -31,6 +32,13 @@ public class ArmahaleusBotTest {
 		
 		Map<String,Ability> abilities = bot.abilities();
 		assertEquals(1, abilities.size());
+		
+	}
+	
+	@Test
+	public void testPawAbility() {
+		
+		assertNotNull(bot.paw());
 		
 	}
 }
