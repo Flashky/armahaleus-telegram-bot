@@ -43,12 +43,10 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: jacoco-report
-        path: target/site/jacoco
+        #path: target/site/jacoco
     - name: Display structure of downloaded files
       run: ls -R
-      working-directory: target/site/jacoco
-    - name: Verify directory
-      run: pwd
+      #working-directory: target/site/jacoco
     - name: Send coverage report
       env:
         CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
