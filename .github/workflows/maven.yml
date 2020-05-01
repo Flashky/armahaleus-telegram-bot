@@ -55,6 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+    - uses: actions/checkout@v2
     - name: Build, Tag, Publish Docker
       uses: HurricanKai/Publish-Docker-Github-Action@1.12.1
       with:
