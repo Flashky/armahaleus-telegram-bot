@@ -30,10 +30,8 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/jacoco.xml
-    - name: Set env
+    - name: Get jar filename
       run: echo ::set-env name=JAR_FILE::$(ls target/*.jar)
-    - name: Test
-      run: echo $JAR_FILE
     - name: Upload java artifact
       uses: actions/upload-artifact@v1
       with:
