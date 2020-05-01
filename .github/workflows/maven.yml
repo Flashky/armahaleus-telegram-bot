@@ -39,9 +39,13 @@ jobs:
         curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
         chmod +x codacy-coverage-reporter
     - name: Download Jacoco report artifact
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2
       with:
         name: jacoco-report
+        path: target/site/jacoco
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: target/site/jacoco
     - name: Send coverage report
       env:
         CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
