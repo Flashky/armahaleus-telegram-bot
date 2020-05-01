@@ -13,7 +13,7 @@ public class ArmahaleusBot extends AbilityBot {
 	
 	private static final BareboneToggle toggle = new BareboneToggle();
 	
-	public ArmahaleusBot(@Value("${bot.token") String botToken, @Value("${bot.name") String botUsername) {
+	public ArmahaleusBot(@Value("${bot.token") String botToken, @Value("${bot.name}") String botUsername) {
 		super(botToken, botUsername, toggle);
 	}
 
