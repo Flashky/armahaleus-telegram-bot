@@ -56,6 +56,11 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v2
+    - name: Download jar artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: java-artifact
+        path: target
     - name: Build, Tag, Publish Docker
       uses: HurricanKai/Publish-Docker-Github-Action@1.12.1
       with:
