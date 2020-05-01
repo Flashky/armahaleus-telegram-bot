@@ -30,6 +30,8 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/jacoco.xml
+    - name: Check generated artifact
+      run: ls -lrt target/*.jar
     - name: Upload java artifact
       uses: actions/upload-artifact@v1
       with:
