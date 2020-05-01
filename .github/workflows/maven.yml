@@ -30,6 +30,11 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/jacoco.xml
+    - name: Upload java artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: java-artifact
+        path: target/armahaleus-telegram-bot-*.java
   report:
     runs-on: ubuntu-latest
     needs: build
