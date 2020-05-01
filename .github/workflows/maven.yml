@@ -29,28 +29,19 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: jacoco-report
-        path: target/site/jacoco/
+        path: target/site/jacoco/jacoco.xml
   report:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v2
-    - name: Setup codacy coverage
-      run: |
-        curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
-        chmod +x codacy-coverage-reporter
     - name: Download Jacoco report artifact
       uses: actions/download-artifact@v2
       with:
         name: jacoco-report
-        #path: target/site/jacoco
-    - name: Display structure of downloaded files
-      run: ls -R
-      #working-directory: target/site/jacoco
-    - name: Send coverage report
-      env:
-        CODACY_PROJECT_TOKEN : ${{ secrets.CODACY_PROJECT_TOKEN }}
-      run: |
-        ./codacy-coverage-reporter report -l Java 
-
+        path: target/site/jacoco
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@master
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
