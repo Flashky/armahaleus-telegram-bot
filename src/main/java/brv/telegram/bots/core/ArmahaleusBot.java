@@ -48,10 +48,7 @@ public class ArmahaleusBot extends AbilityBot {
 	
 			sender.sendPhoto(photo);
 		} catch (TelegramApiException e) {
-
 			silent.send("Sorry, I can't give you any kittens right now.", ctx.chatId());
-			e.printStackTrace();
-			
 		}
 	}
 	
