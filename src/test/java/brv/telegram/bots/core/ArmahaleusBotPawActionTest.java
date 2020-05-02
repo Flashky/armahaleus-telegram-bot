@@ -2,6 +2,7 @@ package brv.telegram.bots.core;
 
 import static org.mockito.Mockito.times;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import brv.telegram.bots.restclients.cats.CatApiClient;
+import brv.telegram.bots.restclients.cats.CatImage;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -23,7 +26,7 @@ public class ArmahaleusBotPawActionTest {
 
 	public static final long CHAT_ID = 1337L;
 
-	private PodamFactory podamFactory = new PodamFactoryImpl();
+	private static PodamFactory podamFactory = new PodamFactoryImpl();
 	
 	// It is important to keep the bot static to avoid any file lock issues
 	@InjectMocks
@@ -34,6 +37,17 @@ public class ArmahaleusBotPawActionTest {
 
 	@Mock
 	private SilentSender silent;
+	
+	@Mock
+	private CatApiClient catApiClient;
+	
+	@Before
+	public void setUp() {
+		
+		CatImage image = podamFactory.manufacturePojo(CatImage.class);
+		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
+		
+	}
 	
 	@Test
 	public void pawActionTest() throws Exception{

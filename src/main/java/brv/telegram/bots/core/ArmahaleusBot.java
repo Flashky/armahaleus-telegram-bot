@@ -1,5 +1,6 @@
 package brv.telegram.bots.core;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
@@ -11,10 +12,16 @@ import org.telegram.abilitybots.api.toggle.BareboneToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import brv.telegram.bots.restclients.cats.CatApiClient;
+import brv.telegram.bots.restclients.cats.CatImage;
+
 @Component
 public class ArmahaleusBot extends AbilityBot {
 	
 	private static final BareboneToggle toggle = new BareboneToggle();
+	
+	@Autowired
+	private CatApiClient catApiClient;
 	
 	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.name}") String botUsername) {
 		super(botToken, botUsername, toggle);
@@ -40,9 +47,11 @@ public class ArmahaleusBot extends AbilityBot {
 		
 		try {
 			
+			CatImage image = catApiClient.getRandomCatImage();
+			
 			SendPhoto photo = new SendPhoto();
 			photo.setChatId(ctx.chatId());
-			photo.setPhoto("https://img.freepik.com/foto-gratis/gato-mojado-bano_160901-244.jpg");
+			photo.setPhoto(image.getUrl());
 	
 			sender.sendPhoto(photo);
 		} catch (TelegramApiException e) {
