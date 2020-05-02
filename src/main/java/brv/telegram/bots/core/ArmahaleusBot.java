@@ -7,6 +7,8 @@ import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.abilitybots.api.objects.Privacy;
+import org.telegram.abilitybots.api.sender.MessageSender;
+import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.toggle.BareboneToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -54,7 +56,12 @@ public class ArmahaleusBot extends AbilityBot {
 	}
 	
 	
+	public void setMessageSender(MessageSender sender) {
+		this.sender = sender;
+	}
 
-
+	public void setSilentSender(SilentSender silent) {
+		this.silent = silent;
+	}
 	
 }
