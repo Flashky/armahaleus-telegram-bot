@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import brv.telegram.bots.restclients.cats.CatApiClient;
-import brv.telegram.bots.restclients.cats.CatImage;
+import brv.telegram.bots.restclients.cats.Image;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -44,7 +44,7 @@ public class ArmahaleusBotPawActionTest {
 	@Before
 	public void setUp() {
 		
-		CatImage image = podamFactory.manufacturePojo(CatImage.class);
+		Image image = podamFactory.manufacturePojo(Image.class);
 		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
 		
 	}

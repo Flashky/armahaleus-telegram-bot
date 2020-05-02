@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import brv.telegram.bots.restclients.cats.CatApiClient;
-import brv.telegram.bots.restclients.cats.CatImage;
+import brv.telegram.bots.restclients.cats.Image;
 
 @Component
 public class ArmahaleusBot extends AbilityBot {
@@ -47,7 +47,7 @@ public class ArmahaleusBot extends AbilityBot {
 		
 		try {
 			
-			CatImage image = catApiClient.getRandomCatImage();
+			Image image = catApiClient.getRandomCatImage();
 			
 			SendPhoto photo = new SendPhoto();
 			photo.setChatId(ctx.chatId());

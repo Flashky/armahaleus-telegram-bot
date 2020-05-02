@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface CatApiClient {
 
 	@GetMapping
-	CatImage getRandomCatImage();
+	Image getRandomCatImage();
 	
 }
 
