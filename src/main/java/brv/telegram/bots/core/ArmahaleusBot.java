@@ -23,7 +23,7 @@ public class ArmahaleusBot extends AbilityBot {
 	@Autowired
 	private CatApiClient catApiClient;
 	
-	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.name}") String botUsername) {
+	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.username}") String botUsername) {
 		super(botToken, botUsername, toggle);
 	}
 
