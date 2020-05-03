@@ -1,15 +1,12 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Release version
 
 on:
-  push:
-    branches: [ master ]
-    paths-ignore: [ '.github/**' ]
-  pull_request:
-    branches: [ master ]
-    paths-ignore: [ '.github/**' ]
+  release:
+    types: [published]
+
 
 jobs:
   build:
@@ -27,11 +24,6 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Upload Jacoco report artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: jacoco-report
-        path: target/site/jacoco/jacoco.xml
     - name: Get jar filename
       run: echo ::set-env name=JAR_FILE::$(ls target/*.jar)
     - name: Upload java artifact
@@ -39,20 +31,6 @@ jobs:
       with:
         name: java-artifact
         path:  ${{ env.JAR_FILE }}
-  report:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - uses: actions/checkout@v2
-    - name: Download Jacoco report artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: jacoco-report
-        path: target/site/jacoco
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@master
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
   deploy:
     runs-on: ubuntu-latest
     needs: build
