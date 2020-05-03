@@ -75,7 +75,7 @@ jobs:
     - name: Get release version
       run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
     - name: Build, Tag, Publish Docker
-      uses: HurricanKai/Publish-Docker-Github-Action@1.12.1
+      uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: flashk/armahaleus-telegram-bot
         username: ${{ secrets.DOCKER_USERNAME }}
