@@ -48,7 +48,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Get release version
-      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF##*/v})
     - name: Update pom.xml version
       run: mvn versions:set -DnewVersion=${{ env.RELEASE_VERSION }}
     - name: Build with Maven
@@ -73,7 +73,7 @@ jobs:
         name: java-artifact
         path: target
     - name: Get release version
-      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF##*/v})
     - name: Build, Tag, Publish Docker
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
