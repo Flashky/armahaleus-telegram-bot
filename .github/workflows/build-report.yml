@@ -5,13 +5,19 @@ name: Build & Report
 
 on:
   push:
+    tags-ignore:
+      - '**'
     paths-ignore: 
       - '.github/**'
   pull_request:
+    
+    tags-ignore:
+      - '**'
     paths-ignore: 
       - '.github/**'
 
 jobs:
+  
   build:
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +38,7 @@ jobs:
       with:
         name: jacoco-report
         path: target/site/jacoco/jacoco.xml
+  
   report:
     runs-on: ubuntu-latest
     needs: build
