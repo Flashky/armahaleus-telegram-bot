@@ -60,7 +60,7 @@ public class ArmahaleusBot extends AbilityBot {
 			switch(media.getType()) {
 				case GIF: 	sendAnimation(ctx, media.getLink()); break;
 				case VIDEO: sendVideo(ctx, media.getLink()); break;
-				default: 	sendPhoto(ctx, media.getLink());
+				default: 	sendPhoto(ctx, media.getLink()); break;
 			}
 		}
 		
