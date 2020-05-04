@@ -1,7 +1,10 @@
 engines:
- coverage:
-   exclude_paths:
-     - 'pom.xml'
-     - '.github/**'
-     - 'src/test/**'
+  coverage:
+    exclude_paths:
+      - 'pom.xml'
+      - 'src/test/**'
 
+exclude_paths:
+  - '.github/**'
+  - 'HELP.md'
+  - 'README.md'
