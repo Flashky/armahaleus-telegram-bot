@@ -69,20 +69,34 @@ public class CatServiceImplTest {
 	
 	@Test
 	public void getRandomCatAsJpgTest() {
-		getRandomCatAsImageTest(JPG_IMAGE_URL);
+		Optional<Media> result = getRandomCatAsImageTest(JPG_IMAGE_URL);
+		
+		// Assertions
+		assertEquals(MediaType.IMAGE, result.get().getType());
+		assertEquals(JPG_IMAGE_URL, result.get().getLink().getHref());
 	}
 
 	@Test
 	public void getRandomCatAsPngTest() {
-		getRandomCatAsImageTest(PNG_IMAGE_URL);
+		
+		Optional<Media> result = getRandomCatAsImageTest(PNG_IMAGE_URL);
+		
+		// Assertions
+		assertEquals(MediaType.IMAGE, result.get().getType());
+		assertEquals(PNG_IMAGE_URL, result.get().getLink().getHref());
 	}
 	
 	@Test
 	public void getRandomCatAsBmpTest() {
-		getRandomCatAsImageTest(BMP_IMAGE_URL);
+		
+		Optional<Media> result = getRandomCatAsImageTest(BMP_IMAGE_URL);
+		
+		// Assertions
+		assertEquals(MediaType.IMAGE, result.get().getType());
+		assertEquals(BMP_IMAGE_URL, result.get().getLink().getHref());
 	}
 	
-	private void getRandomCatAsImageTest(String expectedImageUrl) {
+	private Optional<Media> getRandomCatAsImageTest(String expectedImageUrl) {
 		
 		// Prepare pojos
 		Image image = new Image();
@@ -92,11 +106,7 @@ public class CatServiceImplTest {
 		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
 		
 		// Execute test
-		Optional<Media> result = catService.getRandomCat();
-		
-		// Assertions
-		assertEquals(MediaType.IMAGE, result.get().getType());
-		assertEquals(expectedImageUrl, result.get().getLink().getHref());
+		return catService.getRandomCat();
 		
 	}
 }
