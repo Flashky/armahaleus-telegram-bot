@@ -4,7 +4,6 @@ import static org.mockito.Mockito.times;
 
 import java.util.Optional;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,11 +51,6 @@ public class ArmahaleusBotPawActionTest {
 	
 	@Mock
 	private CatService catService;
-	
-	@Before
-	public void setUp() {
-		
-	}
 	
 	@Test
 	public void pawActionaAsImageTest() throws Exception{
