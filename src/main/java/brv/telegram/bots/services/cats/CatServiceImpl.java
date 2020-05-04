@@ -41,6 +41,7 @@ public class CatServiceImpl implements CatService {
 					break;
 				default: 	
 					media.setType(MediaType.IMAGE);
+					break;
 			}
 			
 			Link link = new Link();
