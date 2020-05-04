@@ -1,5 +1,7 @@
 package brv.telegram.bots.core;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,11 +11,14 @@ import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.abilitybots.api.objects.Privacy;
 import org.telegram.abilitybots.api.toggle.BareboneToggle;
+import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import brv.telegram.bots.restclients.cats.CatApiClient;
-import brv.telegram.bots.restclients.cats.Image;
+import brv.telegram.bots.services.cats.CatService;
+import brv.telegram.bots.services.common.dto.Link;
+import brv.telegram.bots.services.common.dto.Media;
 
 @Component
 public class ArmahaleusBot extends AbilityBot {
@@ -21,7 +26,7 @@ public class ArmahaleusBot extends AbilityBot {
 	private static final BareboneToggle toggle = new BareboneToggle();
 	
 	@Autowired
-	private CatApiClient catApiClient;
+	private CatService catService;
 	
 	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.username}") String botUsername) {
 		super(botToken, botUsername, toggle);
@@ -44,18 +49,74 @@ public class ArmahaleusBot extends AbilityBot {
 	}
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {
+	
+		// Query cat to service
+		Optional<Media> result = catService.getRandomCat();
+		
+		// Send the cat to the chat
+		if(result.isPresent()) {
+			
+			Media media = result.get();
+			switch(media.getType()) {
+				case GIF: 	sendAnimation(ctx, media.getLink()); break;
+				case VIDEO: sendVideo(ctx, media.getLink()); break;
+				default: 	sendPhoto(ctx, media.getLink()); break;
+			}
+		}
+		
+	}
+
+	private void sendPhoto(MessageContext ctx, Link link) {
+		
+		SendPhoto photo = new SendPhoto();
+		photo.setChatId(ctx.chatId());
+		photo.setPhoto(link.getHref());
+		
+		send(photo);
+	}
+
+	private void sendAnimation(MessageContext ctx, Link link) {
+
+		SendAnimation animation = new SendAnimation();
+		animation.setChatId(ctx.chatId());
+		animation.setAnimation(link.getHref());
+	
+		send(animation);
+	}
+
+	private void sendVideo(MessageContext ctx, Link link) {
+		
+		SendVideo video = new SendVideo();
+		video.setChatId(ctx.chatId());
+		video.setVideo(link.getHref());
+		
+		send(video);
+		
+	}
+	
+	private void send(SendPhoto message) {
 		
 		try {
-			
-			Image image = catApiClient.getRandomCatImage();
-			
-			SendPhoto photo = new SendPhoto();
-			photo.setChatId(ctx.chatId());
-			photo.setPhoto(image.getUrl());
-	
-			sender.sendPhoto(photo);
+			sender.sendPhoto(message);
 		} catch (TelegramApiException e) {
-			silent.send("Sorry, I can't give you any kittens right now.", ctx.chatId());
+			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
+		}
+		
+	}
+	
+	private void send(SendAnimation message) {
+		try {
+			this.execute(message);
+		} catch (TelegramApiException e) {
+			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
+		}
+	}
+	
+	private void send(SendVideo message) {
+		try {
+			sender.sendVideo(message);
+		} catch (TelegramApiException e) {
+			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
 		}
 	}
 	
