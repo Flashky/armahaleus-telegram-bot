@@ -1,0 +1,7 @@
+engines:
+ coverage:
+   exclude_paths:
+     - 'pom.xml'
+     - '.github/**'
+     - 'src/test/**'
+
