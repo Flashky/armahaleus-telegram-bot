@@ -34,6 +34,9 @@ public class CatServiceImpl implements CatService {
 				case "gif":	
 					media.setType(MediaType.GIF);
 					break;
+				case "mp4":
+					media.setType(MediaType.VIDEO);
+					break;
 				default: 	
 					media.setType(MediaType.IMAGE);
 			}
