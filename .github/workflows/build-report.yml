@@ -5,12 +5,15 @@ name: Build & Report
 
 on:
   push:
+    branches:
+      - '**'
     tags-ignore:
       - '**'
     paths-ignore: 
       - '.github/**'
   pull_request:
-    
+    branches:
+      - '**'
     tags-ignore:
       - '**'
     paths-ignore: 
