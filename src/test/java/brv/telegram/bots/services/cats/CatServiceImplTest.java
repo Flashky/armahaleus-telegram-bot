@@ -2,6 +2,8 @@ package brv.telegram.bots.services.cats;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -40,11 +42,11 @@ public class CatServiceImplTest {
 		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
 		
 		// Execute test
-		Media result = catService.getRandomCat();
+		Optional<Media> result = catService.getRandomCat();
 		
 		// Assertions
-		assertEquals(MediaType.GIF, result.getType());
-		assertEquals(GIF_IMAGE_URL, result.getLink().getHref());
+		assertEquals(MediaType.GIF, result.get().getType());
+		assertEquals(GIF_IMAGE_URL, result.get().getLink().getHref());
 	}
 
 	@Test
@@ -58,11 +60,11 @@ public class CatServiceImplTest {
 		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
 		
 		// Execute test
-		Media result = catService.getRandomCat();
+		Optional<Media> result = catService.getRandomCat();
 		
 		// Assertions
-		assertEquals(MediaType.VIDEO, result.getType());
-		assertEquals(MP4_VIDEO_URL, result.getLink().getHref());
+		assertEquals(MediaType.VIDEO, result.get().getType());
+		assertEquals(MP4_VIDEO_URL, result.get().getLink().getHref());
 	}
 	
 	@Test
@@ -90,11 +92,11 @@ public class CatServiceImplTest {
 		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
 		
 		// Execute test
-		Media result = catService.getRandomCat();
+		Optional<Media> result = catService.getRandomCat();
 		
 		// Assertions
-		assertEquals(MediaType.IMAGE, result.getType());
-		assertEquals(expectedImageUrl, result.getLink().getHref());
+		assertEquals(MediaType.IMAGE, result.get().getType());
+		assertEquals(expectedImageUrl, result.get().getLink().getHref());
 		
 	}
 }

@@ -1,5 +1,7 @@
 package brv.telegram.bots.services.cats;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ public class CatServiceImpl implements CatService {
 	
 	
 	@Override
-	public Media getRandomCat() {
+	public Optional<Media> getRandomCat() {
 		
 		Image image = catApiClient.getRandomCatImage();
 		
@@ -46,7 +48,7 @@ public class CatServiceImpl implements CatService {
 			media.setLink(link);
 		}
 
-		return media;
+		return Optional.ofNullable(media);
 	}
 
 }
