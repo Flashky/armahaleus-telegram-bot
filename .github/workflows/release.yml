@@ -22,13 +22,13 @@ jobs:
     - uses: olegtarasov/get-tag@v2
       id: version
       with:
-        tagRegex: "v(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+        tagRegex: "^v([0-9]+.[0-9]+.[0-9]+[-]?\\w*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
         tagRegexGroup: 1 # Optional. Default is 1.
     - name: Abort release
       if: steps.version.outputs.tag == null
       run: | 
         echo "Tag name is invalid."
-        echo "Expected: v*"
+        echo "Expected: v[0-9]+.[0-9]+.[0-9]+"
         echo "But found: ${GITHUB_REF##*/}"
         exit 1
         
