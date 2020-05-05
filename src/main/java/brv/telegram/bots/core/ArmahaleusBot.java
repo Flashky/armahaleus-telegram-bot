@@ -26,10 +26,10 @@ import brv.telegram.bots.services.common.dto.Media;
 public class ArmahaleusBot extends AbilityBot {
 	
 	  private static final CustomToggle toggle = new CustomToggle()
-		      .turnOff(DefaultAbility.BAN)
-		      .turnOff(DefaultAbility.UNBAN)
-		      .turnOff(DefaultAbility.PROMOTE)
-		      .turnOff(DefaultAbility.DEMOTE);
+		      .turnOff(DefaultAbility.BAN.toString())
+		      .turnOff(DefaultAbility.UNBAN.toString())
+		      .turnOff(DefaultAbility.PROMOTE.toString())
+		      .turnOff(DefaultAbility.DEMOTE.toString());
 	
 	@Autowired
 	private CatService catService;
