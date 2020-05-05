@@ -3,19 +3,21 @@ package brv.telegram.bots.core;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.abilitybots.api.objects.Privacy;
-import org.telegram.abilitybots.api.toggle.BareboneToggle;
+import org.telegram.abilitybots.api.toggle.CustomToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import brv.telegram.bots.core.configurations.properties.BotProperties;
+import brv.telegram.bots.core.constants.CustomAbility;
+import brv.telegram.bots.core.constants.DefaultAbility;
 import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
@@ -23,29 +25,43 @@ import brv.telegram.bots.services.common.dto.Media;
 @Component
 public class ArmahaleusBot extends AbilityBot {
 	
-	private static final BareboneToggle toggle = new BareboneToggle();
+	private static final CustomToggle toggle = new CustomToggle()
+		      .turnOff(DefaultAbility.BAN.toString())
+		      .turnOff(DefaultAbility.UNBAN.toString())
+		      .turnOff(DefaultAbility.PROMOTE.toString())
+		      .turnOff(DefaultAbility.DEMOTE.toString());
+
+	private int creatorId = 0;
 	
 	@Autowired
 	private CatService catService;
 	
-	public ArmahaleusBot(@Value("${bot.token}") String botToken, @Value("${bot.username}") String botUsername) {
-		super(botToken, botUsername, toggle);
+	public ArmahaleusBot(BotProperties properties) {
+		super(properties.getToken(), properties.getUsername(), toggle);
+		
+		if(properties.getCreatorId() != null) {
+			creatorId = properties.getCreatorId();
+		}
 	}
 
 	@Override
 	public int creatorId() {
-		return 0;
+		return creatorId;
 	}
 	
 	public Ability paw() {
+		
+		CustomAbility ability = CustomAbility.PAW;
+		
 	    return Ability.builder()
-	        .name("paw") 
-	        .info("Get a random kitty!")
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
 	        .action(ctx -> this.sendRandomCatPhoto(ctx))
 	        .build();
+	    
 	}
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {

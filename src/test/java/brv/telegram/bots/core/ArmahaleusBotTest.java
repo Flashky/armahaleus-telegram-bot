@@ -1,9 +1,11 @@
 package brv.telegram.bots.core;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 
 import java.util.Optional;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,6 +22,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import brv.telegram.bots.core.configurations.properties.BotProperties;
 import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
@@ -28,10 +31,11 @@ import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ArmahaleusBotPawActionTest {
+public class ArmahaleusBotTest {
 
 	public static final long CHAT_ID = 1337L;
-
+	private static final int CREATOR_ID = 23;
+	
 	private static PodamFactory podamFactory = new PodamFactoryImpl();
 	
 	private final static String GIF_IMAGE_URL = "http://random-image.com/cat.gif";
@@ -41,7 +45,7 @@ public class ArmahaleusBotPawActionTest {
 	// It is important to keep the bot static to avoid any file lock issues
 	@InjectMocks
 	@Spy
-	private static ArmahaleusBot bot = new ArmahaleusBot("bot-token", "bot-name");
+	private static ArmahaleusBot bot;// = new ArmahaleusBot("bot-token", "bot-name");
 	
 	@Mock
 	private MessageSender sender;
@@ -52,6 +56,12 @@ public class ArmahaleusBotPawActionTest {
 	@Mock
 	private CatService catService;
 	
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		BotProperties properties = podamFactory.manufacturePojo(BotProperties.class);
+		properties.setCreatorId(CREATOR_ID);
+		bot = new ArmahaleusBot(properties);
+	}
 	@Test
 	public void pawActionaAsImageTest() throws Exception{
 
@@ -167,6 +177,11 @@ public class ArmahaleusBotPawActionTest {
 		Mockito.verify(sender, times(1)).sendPhoto(Mockito.any());
 		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
 
+	}
+	
+	@Test
+	public void creatorIdTest() {
+		assertEquals(CREATOR_ID, bot.creatorId());
 	}
 
 }
