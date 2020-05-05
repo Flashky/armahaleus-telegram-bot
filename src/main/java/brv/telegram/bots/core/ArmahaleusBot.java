@@ -10,12 +10,14 @@ import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Locality;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.abilitybots.api.objects.Privacy;
-import org.telegram.abilitybots.api.toggle.BareboneToggle;
+import org.telegram.abilitybots.api.toggle.CustomToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import brv.telegram.bots.core.constants.CustomAbility;
+import brv.telegram.bots.core.constants.DefaultAbility;
 import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
@@ -23,7 +25,11 @@ import brv.telegram.bots.services.common.dto.Media;
 @Component
 public class ArmahaleusBot extends AbilityBot {
 	
-	private static final BareboneToggle toggle = new BareboneToggle();
+	  private static final CustomToggle toggle = new CustomToggle()
+		      .turnOff(DefaultAbility.BAN)
+		      .turnOff(DefaultAbility.UNBAN)
+		      .turnOff(DefaultAbility.PROMOTE)
+		      .turnOff(DefaultAbility.DEMOTE);
 	
 	@Autowired
 	private CatService catService;
@@ -38,14 +44,18 @@ public class ArmahaleusBot extends AbilityBot {
 	}
 	
 	public Ability paw() {
+		
+		CustomAbility ability = CustomAbility.PAW;
+		
 	    return Ability.builder()
-	        .name("paw") 
-	        .info("Get a random kitty!")
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
 	        .action(ctx -> this.sendRandomCatPhoto(ctx))
 	        .build();
+	    
 	}
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {
