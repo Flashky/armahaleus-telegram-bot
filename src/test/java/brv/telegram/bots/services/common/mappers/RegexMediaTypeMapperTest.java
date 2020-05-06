@@ -2,8 +2,6 @@ package brv.telegram.bots.services.common.mappers;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import brv.telegram.bots.services.common.dto.MediaType;
