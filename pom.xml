@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>brv.telegram.bots</groupId>
 	<artifactId>armahaleus-telegram-bot</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<name>armahaleus-telegram-bot</name>
 	<description>Application for adding songs to playlists</description>
 
