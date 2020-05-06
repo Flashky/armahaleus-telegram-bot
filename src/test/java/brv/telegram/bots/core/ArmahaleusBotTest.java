@@ -58,8 +58,12 @@ public class ArmahaleusBotTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		BotProperties properties = podamFactory.manufacturePojo(BotProperties.class);
+		
+		BotProperties properties = new BotProperties();
+		properties.setUsername("bot-username");
+		properties.setToken("bot-token");
 		properties.setCreatorId(CREATOR_ID);
+		
 		bot = new ArmahaleusBot(properties);
 	}
 	@Test
