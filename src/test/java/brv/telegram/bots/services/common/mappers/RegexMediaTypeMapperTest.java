@@ -21,14 +21,6 @@ public class RegexMediaTypeMapperTest {
 	private final static String UNKNOWN_MEDIA_URL = "http://random-image.com/cat.xxx";
 	
 	private MediaTypeMapper mediaTypeGuesser = new RegexMediaTypeMapper();
-	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
 
 	@Test
 	public void testUnknownMedia() {
