@@ -4,6 +4,7 @@ public enum MediaType {
 
 	GIF,
 	IMAGE,
-	VIDEO;
+	VIDEO,
+	OTHER;
 	
 }
