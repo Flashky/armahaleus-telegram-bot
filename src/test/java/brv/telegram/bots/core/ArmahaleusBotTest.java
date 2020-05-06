@@ -45,7 +45,7 @@ public class ArmahaleusBotTest {
 	// It is important to keep the bot static to avoid any file lock issues
 	@InjectMocks
 	@Spy
-	private static ArmahaleusBot bot;// = new ArmahaleusBot("bot-token", "bot-name");
+	private static ArmahaleusBot bot;
 	
 	@Mock
 	private MessageSender sender;
@@ -153,7 +153,7 @@ public class ArmahaleusBotTest {
 	}
 	
 	@Test
-	public void pawActionOnExceptionTest() throws Exception{
+	public void pawActionOnExceptionPhotoTest() throws Exception{
 
 		// Prepare context pojos
 		Update update = new Update();
@@ -165,6 +165,68 @@ public class ArmahaleusBotTest {
 		
 		Link link = new Link();
 		link.setHref(JPG_IMAGE_URL);
+		media.setLink(link);
+		
+		Optional<Media> result = Optional.of(media);
+		
+		// Prepare mocks
+		Mockito.doReturn(result).when(catService).getRandomCat();
+		
+		// Prepare mock to test this exception being thrown
+		Mockito.doThrow(TelegramApiException.class).when(sender).sendPhoto(Mockito.any());
+
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.paw().action().accept(context);
+		
+		Mockito.verify(sender, times(1)).sendPhoto(Mockito.any());
+		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+
+	}
+	
+	@Test
+	public void pawActionOnExceptionVideoTest() throws Exception{
+
+		// Prepare context pojos
+		Update update = new Update();
+		User user = podamFactory.manufacturePojo(User.class);
+		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
+
+		Media media = new Media();
+		media.setType(MediaType.IMAGE);
+		
+		Link link = new Link();
+		link.setHref(MP4_VIDEO_URL);
+		media.setLink(link);
+		
+		Optional<Media> result = Optional.of(media);
+		
+		// Prepare mocks
+		Mockito.doReturn(result).when(catService).getRandomCat();
+		
+		// Prepare mock to test this exception being thrown
+		Mockito.doThrow(TelegramApiException.class).when(sender).sendPhoto(Mockito.any());
+
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.paw().action().accept(context);
+		
+		Mockito.verify(sender, times(1)).sendPhoto(Mockito.any());
+		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+
+	}
+	
+	@Test
+	public void pawActionOnExceptionAnimationTest() throws Exception{
+
+		// Prepare context pojos
+		Update update = new Update();
+		User user = podamFactory.manufacturePojo(User.class);
+		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
+
+		Media media = new Media();
+		media.setType(MediaType.IMAGE);
+		
+		Link link = new Link();
+		link.setHref(GIF_IMAGE_URL);
 		media.setLink(link);
 		
 		Optional<Media> result = Optional.of(media);
