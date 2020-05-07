@@ -64,6 +64,24 @@ public class ArmahaleusBot extends AbilityBot {
 	    
 	}
 	
+	public Ability start() {
+		
+		CustomAbility ability = CustomAbility.START;
+		
+	    return Ability.builder()
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
+	        .privacy(Privacy.PUBLIC)
+	        .locality(Locality.ALL)
+	        .input(0)
+	        .action(ctx -> { 
+	        	silent.send("Hi! I'm "+this.getBotUsername()+" and I will be your entertainment bot.", ctx.chatId());
+	        })
+	        .build();
+	    
+	}
+	
+	
 	private void sendRandomCatPhoto(MessageContext ctx) {
 	
 		// Query cat to service
