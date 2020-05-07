@@ -11,13 +11,15 @@
 	</parent>
 	<groupId>brv.telegram.bots</groupId>
 	<artifactId>armahaleus-telegram-bot</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<name>armahaleus-telegram-bot</name>
 	<description>Application for adding songs to playlists</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
+		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
+		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
 	</properties>
 
 	<dependencies>
@@ -56,6 +58,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+        <groupId>org.mapstruct</groupId>
+        	<artifactId>mapstruct</artifactId>
+        	<version>${org.mapstruct.version}</version>
+    	</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
@@ -89,6 +96,27 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source> <!-- depending on your project -->
+					<target>1.8</target> <!-- depending on your project -->
+					<annotationProcessorPaths>
+	                    <path>
+	                        <groupId>org.mapstruct</groupId>
+	                        <artifactId>mapstruct-processor</artifactId>
+	                        <version>${org.mapstruct.version}</version>
+	                    </path>
+	                    <path>
+	                        <groupId>org.projectlombok</groupId>
+	                        <artifactId>lombok</artifactId>
+	                        <version>${lombok.version}</version>
+	                    </path>
+						<!-- other annotation processors -->
+					</annotationProcessorPaths>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>

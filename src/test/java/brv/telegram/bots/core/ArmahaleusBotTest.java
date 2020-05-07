@@ -45,7 +45,7 @@ public class ArmahaleusBotTest {
 	// It is important to keep the bot static to avoid any file lock issues
 	@InjectMocks
 	@Spy
-	private static ArmahaleusBot bot;// = new ArmahaleusBot("bot-token", "bot-name");
+	private static ArmahaleusBot bot;
 	
 	@Mock
 	private MessageSender sender;
@@ -58,8 +58,12 @@ public class ArmahaleusBotTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		BotProperties properties = podamFactory.manufacturePojo(BotProperties.class);
+		
+		BotProperties properties = new BotProperties();
+		properties.setUsername("bot-username");
+		properties.setToken("bot-token");
 		properties.setCreatorId(CREATOR_ID);
+		
 		bot = new ArmahaleusBot(properties);
 	}
 	@Test
@@ -149,21 +153,11 @@ public class ArmahaleusBotTest {
 	}
 	
 	@Test
-	public void pawActionOnExceptionTest() throws Exception{
+	public void pawActionOnExceptionPhotoTest() throws Exception{
 
 		// Prepare context pojos
-		Update update = new Update();
-		User user = podamFactory.manufacturePojo(User.class);
-		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
-
-		Media media = new Media();
-		media.setType(MediaType.IMAGE);
-		
-		Link link = new Link();
-		link.setHref(JPG_IMAGE_URL);
-		media.setLink(link);
-		
-		Optional<Media> result = Optional.of(media);
+		MessageContext context = manufacturePojoMessageContext();
+		Optional<Media> result = manufacturePojoMedia(MediaType.IMAGE, JPG_IMAGE_URL);	
 		
 		// Prepare mocks
 		Mockito.doReturn(result).when(catService).getRandomCat();
@@ -177,6 +171,68 @@ public class ArmahaleusBotTest {
 		Mockito.verify(sender, times(1)).sendPhoto(Mockito.any());
 		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
 
+	}
+	
+	@Test
+	public void pawActionOnExceptionVideoTest() throws Exception{
+
+		// Prepare context pojos
+		MessageContext context = manufacturePojoMessageContext();
+		Optional<Media> result = manufacturePojoMedia(MediaType.VIDEO, MP4_VIDEO_URL);		
+		
+		// Prepare mocks
+		Mockito.doReturn(result).when(catService).getRandomCat();
+		
+		// Prepare mock to test this exception being thrown
+		Mockito.doThrow(TelegramApiException.class).when(sender).sendVideo(Mockito.any());
+
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.paw().action().accept(context);
+		
+		Mockito.verify(sender, times(1)).sendVideo(Mockito.any());
+		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+
+	}
+	
+	@Test
+	public void pawActionOnExceptionAnimationTest() throws Exception{
+
+		// Prepare context pojos
+		MessageContext context = manufacturePojoMessageContext();
+		Optional<Media> result = manufacturePojoMedia(MediaType.GIF, GIF_IMAGE_URL);		
+		
+		// Prepare mocks
+		Mockito.doReturn(result).when(catService).getRandomCat();
+		
+		// Prepare mock to test this exception being thrown
+		Mockito.doThrow(TelegramApiException.class).when(bot).execute((SendAnimation) Mockito.any());
+
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.paw().action().accept(context);
+		
+		Mockito.verify(bot, times(1)).execute(Mockito.any(SendAnimation.class));
+		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+
+	}
+	
+	private MessageContext manufacturePojoMessageContext() {
+		
+		Update update = new Update();
+		User user = podamFactory.manufacturePojo(User.class);
+		return MessageContext.newContext(update, user, CHAT_ID);
+		
+	}
+	
+	private Optional<Media> manufacturePojoMedia(MediaType mediaType, String url) {
+
+		Media media = new Media();
+		media.setType(mediaType);
+		
+		Link link = new Link();
+		link.setHref(url);
+		media.setLink(link);
+		
+		return Optional.ofNullable(media);
 	}
 	
 	@Test
