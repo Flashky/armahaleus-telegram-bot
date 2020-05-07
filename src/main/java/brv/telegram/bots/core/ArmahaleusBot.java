@@ -59,7 +59,7 @@ public class ArmahaleusBot extends AbilityBot {
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
-	        .action(ctx -> this.sendRandomCatPhoto(ctx))
+	        .action(ctx -> { this.sendRandomCatPhoto(ctx); })
 	        .build();
 	    
 	}
@@ -70,70 +70,52 @@ public class ArmahaleusBot extends AbilityBot {
 		Optional<Media> result = catService.getRandomCat();
 		
 		// Send the cat to the chat
-		if(result.isPresent()) {
+		try {
 			
-			Media media = result.get();
-			switch(media.getType()) {
-				case GIF: 	sendAnimation(ctx, media.getLink()); break;
-				case VIDEO: sendVideo(ctx, media.getLink()); break;
-				default: 	sendPhoto(ctx, media.getLink()); break;
-			}
+			if(result.isPresent()) {
+				
+				Media media = result.get();
+				switch(media.getType()) {
+					case GIF: 	sendAnimation(ctx, media.getLink()); break;
+					case VIDEO: sendVideo(ctx, media.getLink()); break;
+					default: 	sendPhoto(ctx, media.getLink()); break;
+				}
+				
+			} 
+			
+		} catch(TelegramApiException e) {
+			silent.send("I cannot show you any kittens! They are hidden!", ctx.chatId());
 		}
 		
 	}
 
-	private void sendPhoto(MessageContext ctx, Link link) {
+	private void sendPhoto(MessageContext ctx, Link link) throws TelegramApiException {
 		
 		SendPhoto photo = new SendPhoto();
 		photo.setChatId(ctx.chatId());
 		photo.setPhoto(link.getHref());
 		
-		send(photo);
+		sender.sendPhoto(photo);
+
 	}
 
-	private void sendAnimation(MessageContext ctx, Link link) {
+	private void sendAnimation(MessageContext ctx, Link link) throws TelegramApiException {
 
 		SendAnimation animation = new SendAnimation();
 		animation.setChatId(ctx.chatId());
 		animation.setAnimation(link.getHref());
 	
-		send(animation);
+		this.execute(animation);
 	}
 
-	private void sendVideo(MessageContext ctx, Link link) {
+	private void sendVideo(MessageContext ctx, Link link) throws TelegramApiException  {
 		
 		SendVideo video = new SendVideo();
 		video.setChatId(ctx.chatId());
 		video.setVideo(link.getHref());
 		
-		send(video);
+		sender.sendVideo(video);
 		
 	}
-	
-	private void send(SendPhoto message) {
-		
-		try {
-			sender.sendPhoto(message);
-		} catch (TelegramApiException e) {
-			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
-		}
-		
-	}
-	
-	private void send(SendAnimation message) {
-		try {
-			this.execute(message);
-		} catch (TelegramApiException e) {
-			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
-		}
-	}
-	
-	private void send(SendVideo message) {
-		try {
-			sender.sendVideo(message);
-		} catch (TelegramApiException e) {
-			silent.send("Sorry, I can't give you any kittens right now.", Long.valueOf(message.getChatId()));
-		}
-	}
-	
+
 }
