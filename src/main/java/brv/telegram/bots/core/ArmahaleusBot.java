@@ -21,6 +21,7 @@ import brv.telegram.bots.core.constants.DefaultAbility;
 import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
+import brv.telegram.bots.services.dogs.DogService;
 
 @Component
 public class ArmahaleusBot extends AbilityBot {
@@ -35,6 +36,9 @@ public class ArmahaleusBot extends AbilityBot {
 	
 	@Autowired
 	private CatService catService;
+	
+	@Autowired
+	private DogService dogService;
 	
 	public ArmahaleusBot(BotProperties properties) {
 		super(properties.getToken(), properties.getUsername(), toggle);
@@ -59,7 +63,56 @@ public class ArmahaleusBot extends AbilityBot {
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
-	        .action(ctx -> { this.sendRandomCatPhoto(ctx); })
+	        .action(this::sendRandomCatPhoto)
+	        .build();
+	    
+	}
+	
+	public Ability woof() {
+	    
+		CustomAbility ability = CustomAbility.WOOF;
+		
+		return Ability.builder()
+		        .name(ability.toString()) 
+		        .info(ability.getDescription())
+		        .privacy(Privacy.PUBLIC)
+		        .locality(Locality.ALL)
+		        .input(0)
+		        .action(this::sendRandomDogPhoto)
+		        .build();
+	}
+	
+	public Ability start() {
+		
+		CustomAbility ability = CustomAbility.START;
+		
+	    return Ability.builder()
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
+	        .privacy(Privacy.PUBLIC)
+	        .locality(Locality.ALL)
+	        .input(0)
+	        .action(ctx -> silent.send("Hi! I'm "+this.getBotUsername()+" and I will be your entertainment bot.", ctx.chatId()))
+	        .build();
+	    
+	}
+	
+	public Ability help() {
+		
+		CustomAbility ability = CustomAbility.HELP;
+		
+	    return Ability.builder()
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
+	        .privacy(Privacy.PUBLIC)
+	        .locality(Locality.USER)
+	        .input(0)
+	        .action(ctx -> {
+	        	silent.send("Everyone loves cats! Type /cat and enjoy:", ctx.chatId());
+	        	this.paw().action().accept(ctx);
+	        	silent.send("More a dog person? Then use /woof to get your puppies:", ctx.chatId());
+	        	this.woof().action().accept(ctx);
+	        })
 	        .build();
 	    
 	}
@@ -67,28 +120,43 @@ public class ArmahaleusBot extends AbilityBot {
 	private void sendRandomCatPhoto(MessageContext ctx) {
 	
 		// Query cat to service
-		Optional<Media> result = catService.getRandomCat();
-		
-		// Send the cat to the chat
 		try {
-			
-			if(result.isPresent()) {
-				
-				Media media = result.get();
-				switch(media.getType()) {
-					case GIF: 	sendAnimation(ctx, media.getLink()); break;
-					case VIDEO: sendVideo(ctx, media.getLink()); break;
-					default: 	sendPhoto(ctx, media.getLink()); break;
-				}
-				
-			} 
-			
+			Optional<Media> result = catService.getRandomCat();
+			sendMedia(ctx, result);
 		} catch(TelegramApiException e) {
 			silent.send("I cannot show you any kittens! They are hidden!", ctx.chatId());
 		}
 		
 	}
+	
+	private void sendRandomDogPhoto(MessageContext ctx) {
+		
+		// Query do to service
+		try {
+			Optional<Media> result = dogService.getRandomDog();
+			sendMedia(ctx, result);
+		} catch(TelegramApiException e) {
+			silent.send("I cannot show you any dogs! Try again!", ctx.chatId());
+		}
+		
+	}
 
+
+	private void sendMedia(MessageContext ctx, Optional<Media> mediaResult) throws TelegramApiException {
+		
+		// Send the media to the chat
+		if(mediaResult.isPresent()) {
+			
+			Media media = mediaResult.get();
+			switch(media.getType()) {
+				case GIF: 	sendAnimation(ctx, media.getLink()); break;
+				case VIDEO: sendVideo(ctx, media.getLink()); break;
+				default: 	sendPhoto(ctx, media.getLink()); break;
+			}
+		} 
+
+	}
+	
 	private void sendPhoto(MessageContext ctx, Link link) throws TelegramApiException {
 		
 		SendPhoto photo = new SendPhoto();

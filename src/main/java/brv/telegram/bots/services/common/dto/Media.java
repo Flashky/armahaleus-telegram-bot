@@ -6,5 +6,10 @@ import lombok.Data;
 public class Media {
 
 	private MediaType type;
+	
+	/**
+	 * Size in bytes.
+	 */
+	private Long size;
 	private Link link; 
 }

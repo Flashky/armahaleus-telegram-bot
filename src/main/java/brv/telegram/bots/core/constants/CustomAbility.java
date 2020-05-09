@@ -1,7 +1,10 @@
 package brv.telegram.bots.core.constants;
 
 public enum CustomAbility {
-	PAW("Get a random kitty!");
+	START(""),
+	HELP(""),
+	PAW("Get a random kitty!"),
+	WOOF("Get a random dog!");
 	
 	private String description;
 	

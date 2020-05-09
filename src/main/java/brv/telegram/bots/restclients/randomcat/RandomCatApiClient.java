@@ -1,10 +1,10 @@
-package brv.telegram.bots.restclients.cats;
+package brv.telegram.bots.restclients.randomcat;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "cats", url = "https://aws.random.cat/meow")
-public interface CatApiClient {
+@FeignClient(name = "random-cat", url = "https://aws.random.cat/meow")
+public interface RandomCatApiClient {
 
 	@GetMapping
 	Image getRandomCatImage();
