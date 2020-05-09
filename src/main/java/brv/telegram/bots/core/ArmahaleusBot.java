@@ -105,10 +105,14 @@ public class ArmahaleusBot extends AbilityBot {
 	        .name(ability.toString()) 
 	        .info(ability.getDescription())
 	        .privacy(Privacy.PUBLIC)
-	        .locality(Locality.ALL)
+	        .locality(Locality.USER)
 	        .input(0)
-	        .action(ctx -> silent.send("Everyone loves cats! Type /cat and enjoy:", ctx.chatId()))
-	        .post(ctx -> this.paw().action().accept(ctx))
+	        .action(ctx -> {
+	        	silent.send("Everyone loves cats! Type /cat and enjoy:", ctx.chatId());
+	        	this.paw().action().accept(ctx);
+	        	silent.send("More a dog person? Then use /woof to get your puppies:", ctx.chatId());
+	        	this.woof().action().accept(ctx);
+	        })
 	        .build();
 	    
 	}

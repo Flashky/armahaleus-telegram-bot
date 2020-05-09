@@ -94,7 +94,7 @@ public class ArmahaleusBotTest {
 		bot.help().action().accept(context);
 
 		// We verify that the silent sender was called only ONCE and sent Hello World to CHAT_ID!
-		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+		Mockito.verify(silent, times(2)).send(Mockito.any(), Mockito.anyLong());
 	}
 	
 	@Test
