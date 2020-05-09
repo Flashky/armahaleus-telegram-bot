@@ -3,6 +3,8 @@ package brv.telegram.bots.services.cats;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -13,8 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import brv.telegram.bots.restclients.randomcat.Image;
-import brv.telegram.bots.restclients.randomcat.RandomCatApiClient;
+import brv.telegram.bots.restclients.catapi.SearchResult;
+import brv.telegram.bots.restclients.catapi.TheCatApiClient;
 import brv.telegram.bots.services.common.dto.Media;
 import brv.telegram.bots.services.common.dto.MediaType;
 
@@ -32,20 +34,13 @@ public class CatServiceImplTest {
 	private CatService catService = new CatServiceImpl();
 	
 	@Mock
-	private RandomCatApiClient catApiClient;
+	private TheCatApiClient catApiClient;
 
 	@Test
 	public void getRandomCatAsGifTest() {
 		
-		// Prepare pojos
-		Image image = new Image();
-		image.setUrl(GIF_IMAGE_URL);
-		
-		// Prepare mocks
-		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
-		
 		// Execute test
-		Optional<Media> result = catService.getRandomCat();
+		Optional<Media> result = getRandomCatAsImageTest(GIF_IMAGE_URL);
 		
 		// Assertions
 		assertEquals(MediaType.GIF, result.get().getType());
@@ -55,15 +50,9 @@ public class CatServiceImplTest {
 	@Test
 	public void getRandomCatAsMp4Test() {
 		
-		// Prepare pojos
-		Image image = new Image();
-		image.setUrl(MP4_VIDEO_URL);
-		
-		// Prepare mocks
-		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
-		
 		// Execute test
-		Optional<Media> result = catService.getRandomCat();
+		Optional<Media> result = getRandomCatAsImageTest(MP4_VIDEO_URL);
+		
 		
 		// Assertions
 		assertEquals(MediaType.VIDEO, result.get().getType());
@@ -110,10 +99,24 @@ public class CatServiceImplTest {
 	}
 	
 	@Test(expected = NoSuchElementException.class)
+	public void getRandomCatNull() {
+		
+		// Prepare mocks
+		Mockito.doReturn(null).when(catApiClient).getImageSearchResults();
+		
+		// Execute test
+		Optional<Media> result = catService.getRandomCat();
+		
+		// Assertions
+		assertNull(result.get());
+
+	}
+	
+	@Test(expected = NoSuchElementException.class)
 	public void getRandomCatEmpty() {
 		
 		// Prepare mocks
-		Mockito.doReturn(null).when(catApiClient).getRandomCatImage();
+		Mockito.doReturn(new ArrayList<>()).when(catApiClient).getImageSearchResults();
 		
 		// Execute test
 		Optional<Media> result = catService.getRandomCat();
@@ -126,11 +129,13 @@ public class CatServiceImplTest {
 	private Optional<Media> getRandomCatAsImageTest(String expectedImageUrl) {
 		
 		// Prepare pojos
-		Image image = new Image();
+		SearchResult image = new SearchResult();
 		image.setUrl(expectedImageUrl);
+		List<SearchResult> results = new ArrayList<>();
+		results.add(image);
 		
 		// Prepare mocks
-		Mockito.doReturn(image).when(catApiClient).getRandomCatImage();
+		Mockito.doReturn(results).when(catApiClient).getImageSearchResults();
 		
 		// Execute test
 		return catService.getRandomCat();
