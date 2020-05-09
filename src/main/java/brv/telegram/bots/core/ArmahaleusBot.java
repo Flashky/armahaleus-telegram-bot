@@ -1,9 +1,6 @@
 package brv.telegram.bots.core;
 
 import java.util.Optional;
-import java.util.function.Predicate;
-
-import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +13,6 @@ import org.telegram.abilitybots.api.toggle.CustomToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import brv.telegram.bots.core.configurations.properties.BotProperties;
@@ -25,6 +21,7 @@ import brv.telegram.bots.core.constants.DefaultAbility;
 import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
+import brv.telegram.bots.services.dogs.DogService;
 
 @Component
 public class ArmahaleusBot extends AbilityBot {
@@ -39,6 +36,9 @@ public class ArmahaleusBot extends AbilityBot {
 	
 	@Autowired
 	private CatService catService;
+	
+	@Autowired
+	private DogService dogService;
 	
 	public ArmahaleusBot(BotProperties properties) {
 		super(properties.getToken(), properties.getUsername(), toggle);
@@ -66,6 +66,20 @@ public class ArmahaleusBot extends AbilityBot {
 	        .action(this::sendRandomCatPhoto)
 	        .build();
 	    
+	}
+	
+	public Ability woof() {
+	    
+		CustomAbility ability = CustomAbility.WOOF;
+		
+		return Ability.builder()
+		        .name(ability.toString()) 
+		        .info(ability.getDescription())
+		        .privacy(Privacy.PUBLIC)
+		        .locality(Locality.ALL)
+		        .input(0)
+		        .action(this::sendRandomDogPhoto)
+		        .build();
 	}
 	
 	public Ability start() {
@@ -98,38 +112,47 @@ public class ArmahaleusBot extends AbilityBot {
 	        .build();
 	    
 	}
-    
-    @NotNull
-    private Predicate<Update> hasMessageWith(String msg) {
-      return upd -> upd.getMessage().getText().equalsIgnoreCase(msg);
-    }
-	
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {
 	
 		// Query cat to service
-		Optional<Media> result = catService.getRandomCat();
-		
-		// Send the cat to the chat
 		try {
-			
-			if(result.isPresent()) {
-				
-				Media media = result.get();
-				switch(media.getType()) {
-					case GIF: 	sendAnimation(ctx, media.getLink()); break;
-					case VIDEO: sendVideo(ctx, media.getLink()); break;
-					default: 	sendPhoto(ctx, media.getLink()); break;
-				}
-				
-			} 
-			
+			Optional<Media> result = catService.getRandomCat();
+			sendMedia(ctx, result);
 		} catch(TelegramApiException e) {
 			silent.send("I cannot show you any kittens! They are hidden!", ctx.chatId());
 		}
 		
 	}
+	
+	private void sendRandomDogPhoto(MessageContext ctx) {
+		
+		// Query do to service
+		try {
+			Optional<Media> result = dogService.getRandomDog();
+			sendMedia(ctx, result);
+		} catch(TelegramApiException e) {
+			silent.send("I cannot show you any dogs! Try again!", ctx.chatId());
+		}
+		
+	}
 
+
+	private void sendMedia(MessageContext ctx, Optional<Media> mediaResult) throws TelegramApiException {
+		
+		// Send the media to the chat
+		if(mediaResult.isPresent()) {
+			
+			Media media = mediaResult.get();
+			switch(media.getType()) {
+				case GIF: 	sendAnimation(ctx, media.getLink()); break;
+				case VIDEO: sendVideo(ctx, media.getLink()); break;
+				default: 	sendPhoto(ctx, media.getLink()); break;
+			}
+		} 
+
+	}
+	
 	private void sendPhoto(MessageContext ctx, Link link) throws TelegramApiException {
 		
 		SendPhoto photo = new SendPhoto();
