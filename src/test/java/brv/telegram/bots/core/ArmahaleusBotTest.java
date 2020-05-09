@@ -27,6 +27,7 @@ import brv.telegram.bots.services.cats.CatService;
 import brv.telegram.bots.services.common.dto.Link;
 import brv.telegram.bots.services.common.dto.Media;
 import brv.telegram.bots.services.common.dto.MediaType;
+import brv.telegram.bots.services.dogs.DogService;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -55,6 +56,9 @@ public class ArmahaleusBotTest {
 	
 	@Mock
 	private CatService catService;
+	
+	@Mock
+	private DogService dogService;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -203,6 +207,25 @@ public class ArmahaleusBotTest {
 		Mockito.verify(bot, times(1)).execute(Mockito.any(SendAnimation.class));
 		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
 
+	}
+	
+	@Test
+	public void woofActionTest() throws TelegramApiException {
+		// Prepare context pojos
+		Update update = new Update();
+		User user = podamFactory.manufacturePojo(User.class);
+		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
+		Optional<Media> result = manufacturePojoMedia(MediaType.IMAGE, JPG_IMAGE_URL);
+
+		// Prepare mocks
+		Mockito.doReturn(result).when(dogService).getRandomDog();
+		
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.woof().action().accept(context);
+
+		// We verify that the silent sender was called only ONCE and sent Hello World to CHAT_ID!
+		Mockito.verify(sender, times(1)).sendPhoto(Mockito.any());
+		Mockito.verify(silent, times(0)).send(Mockito.any(), Mockito.anyLong());
 	}
 	
 	private MessageContext manufacturePojoMessageContext() {
