@@ -37,6 +37,9 @@ hs_err_pid*
 *.iml
 *.iws
 
+# VSCode folders
+.vscode
+
 # Maven
 log/
 target/
