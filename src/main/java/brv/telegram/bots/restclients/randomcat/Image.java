@@ -1,4 +1,4 @@
-package brv.telegram.bots.restclients.cats;
+package brv.telegram.bots.restclients.randomcat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
