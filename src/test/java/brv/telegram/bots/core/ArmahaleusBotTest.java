@@ -85,6 +85,19 @@ public class ArmahaleusBotTest {
 	}
 	
 	@Test
+	public void helpAction() {
+		Update update = new Update();
+		User user = podamFactory.manufacturePojo(User.class);
+		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
+		
+		// We consume a context in the lamda declaration, so we pass the context to the action logic
+		bot.help().action().accept(context);
+
+		// We verify that the silent sender was called only ONCE and sent Hello World to CHAT_ID!
+		Mockito.verify(silent, times(1)).send(Mockito.any(), Mockito.anyLong());
+	}
+	
+	@Test
 	public void pawActionaAsImageTest() throws Exception{
 
 		// Prepare context pojos
