@@ -1,6 +1,9 @@
 package brv.telegram.bots.core;
 
 import java.util.Optional;
+import java.util.function.Predicate;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,7 @@ import org.telegram.abilitybots.api.toggle.CustomToggle;
 import org.telegram.telegrambots.meta.api.methods.send.SendAnimation;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import brv.telegram.bots.core.configurations.properties.BotProperties;
@@ -59,7 +63,7 @@ public class ArmahaleusBot extends AbilityBot {
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
-	        .action(ctx -> { this.sendRandomCatPhoto(ctx); })
+	        .action(this::sendRandomCatPhoto)
 	        .build();
 	    
 	}
@@ -74,12 +78,31 @@ public class ArmahaleusBot extends AbilityBot {
 	        .privacy(Privacy.PUBLIC)
 	        .locality(Locality.ALL)
 	        .input(0)
-	        .action(ctx -> { 
-	        	silent.send("Hi! I'm "+this.getBotUsername()+" and I will be your entertainment bot.", ctx.chatId());
-	        })
+	        .action(ctx -> silent.send("Hi! I'm "+this.getBotUsername()+" and I will be your entertainment bot.", ctx.chatId()))
 	        .build();
 	    
 	}
+	
+	public Ability help() {
+		
+		CustomAbility ability = CustomAbility.HELP;
+		
+	    return Ability.builder()
+	        .name(ability.toString()) 
+	        .info(ability.getDescription())
+	        .privacy(Privacy.PUBLIC)
+	        .locality(Locality.ALL)
+	        .input(0)
+	        .action(ctx -> silent.send("Everyone loves cats! Type /cat and enjoy:", ctx.chatId()))
+	        .post(ctx -> this.paw().action().accept(ctx))
+	        .build();
+	    
+	}
+    
+    @NotNull
+    private Predicate<Update> hasMessageWith(String msg) {
+      return upd -> upd.getMessage().getText().equalsIgnoreCase(msg);
+    }
 	
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {
