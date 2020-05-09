@@ -13,8 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import brv.telegram.bots.restclients.cats.CatApiClient;
-import brv.telegram.bots.restclients.cats.Image;
+import brv.telegram.bots.restclients.randomcat.Image;
+import brv.telegram.bots.restclients.randomcat.RandomCatApiClient;
 import brv.telegram.bots.services.common.dto.Media;
 import brv.telegram.bots.services.common.dto.MediaType;
 
@@ -32,7 +32,7 @@ public class CatServiceImplTest {
 	private CatService catService = new CatServiceImpl();
 	
 	@Mock
-	private CatApiClient catApiClient;
+	private RandomCatApiClient catApiClient;
 
 	@Test
 	public void getRandomCatAsGifTest() {

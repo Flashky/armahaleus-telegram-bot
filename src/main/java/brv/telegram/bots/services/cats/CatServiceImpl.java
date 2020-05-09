@@ -6,16 +6,16 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import brv.telegram.bots.restclients.cats.CatApiClient;
-import brv.telegram.bots.restclients.cats.Image;
-import brv.telegram.bots.services.cats.mappers.MediaMapper;
+import brv.telegram.bots.restclients.randomcat.Image;
+import brv.telegram.bots.restclients.randomcat.RandomCatApiClient;
+import brv.telegram.bots.services.cats.mappers.RandomCatMapper;
 import brv.telegram.bots.services.common.dto.Media;
 
 @Service
 public class CatServiceImpl implements CatService {
 
 	@Autowired
-	private CatApiClient catApiClient;
+	private RandomCatApiClient catApiClient;
 
 	
 	@Override
@@ -24,7 +24,7 @@ public class CatServiceImpl implements CatService {
 		Image image = catApiClient.getRandomCatImage();
 		
 		// Map and return the result
-		MediaMapper mapper = Mappers.getMapper(MediaMapper.class);
+		RandomCatMapper mapper = Mappers.getMapper(RandomCatMapper.class);
 		Media media = mapper.map(image);
 
 		return Optional.ofNullable(media);
