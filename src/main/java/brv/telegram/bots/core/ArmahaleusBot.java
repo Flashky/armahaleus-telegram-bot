@@ -98,12 +98,6 @@ public class ArmahaleusBot extends AbilityBot {
 	        .build();
 	    
 	}
-    
-    @NotNull
-    private Predicate<Update> hasMessageWith(String msg) {
-      return upd -> upd.getMessage().getText().equalsIgnoreCase(msg);
-    }
-	
 	
 	private void sendRandomCatPhoto(MessageContext ctx) {
 	
