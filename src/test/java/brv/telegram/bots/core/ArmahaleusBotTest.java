@@ -38,9 +38,9 @@ public class ArmahaleusBotTest {
 	
 	private static PodamFactory podamFactory = new PodamFactoryImpl();
 	
-	private final static String GIF_IMAGE_URL = "http://random-image.com/cat.gif";
-	private final static String JPG_IMAGE_URL = "http://random-image.com/cat.jpg";
-	private final static String MP4_VIDEO_URL = "http://random-image.com/cat.mp4";
+	private final static String GIF_IMAGE_URL = "http://random-image.com/file.gif";
+	private final static String JPG_IMAGE_URL = "http://random-image.com/file.jpg";
+	private final static String MP4_VIDEO_URL = "http://random-image.com/file.mp4";
 	
 	// It is important to keep the bot static to avoid any file lock issues
 	@InjectMocks
@@ -87,16 +87,8 @@ public class ArmahaleusBotTest {
 		Update update = new Update();
 		User user = podamFactory.manufacturePojo(User.class);
 		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
+		Optional<Media> result = manufacturePojoMedia(MediaType.IMAGE, JPG_IMAGE_URL);
 
-		Media media = new Media();
-		media.setType(MediaType.IMAGE);
-		
-		Link link = new Link();
-		link.setHref(JPG_IMAGE_URL);
-		media.setLink(link);
-		
-		Optional<Media> result = Optional.of(media);
-		
 		// Prepare mocks
 		Mockito.doReturn(result).when(catService).getRandomCat();
 		
@@ -115,15 +107,7 @@ public class ArmahaleusBotTest {
 		Update update = new Update();
 		User user = podamFactory.manufacturePojo(User.class);
 		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
-
-		Media media = new Media();
-		media.setType(MediaType.GIF);
-		
-		Link link = new Link();
-		link.setHref(GIF_IMAGE_URL);
-		media.setLink(link);
-		
-		Optional<Media> result = Optional.of(media);
+		Optional<Media> result = manufacturePojoMedia(MediaType.GIF, GIF_IMAGE_URL);
 		
 		// Prepare mocks
 		Mockito.doReturn(result).when(catService).getRandomCat();
@@ -145,15 +129,7 @@ public class ArmahaleusBotTest {
 		Update update = new Update();
 		User user = podamFactory.manufacturePojo(User.class);
 		MessageContext context = MessageContext.newContext(update, user, CHAT_ID);
-
-		Media media = new Media();
-		media.setType(MediaType.VIDEO);
-		
-		Link link = new Link();
-		link.setHref(MP4_VIDEO_URL);
-		media.setLink(link);
-		
-		Optional<Media> result = Optional.of(media);
+		Optional<Media> result = manufacturePojoMedia(MediaType.VIDEO, MP4_VIDEO_URL);
 		
 		// Prepare mocks
 		Mockito.doReturn(result).when(catService).getRandomCat();
